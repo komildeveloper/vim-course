@@ -1,22 +1,39 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-unimpaired'
 Plug 'jiangmiao/auto-pairs'
-Plug 'joshdick/onedark.vim'
+
+Plug 'mattn/emmet-vim'
+
 Plug 'sheerun/vim-polyglot'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'mhinz/vim-startify'
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'ryanoasis/vim-devicons' 
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+Plug 'tomasiser/vim-code-dark'
+
+Plug 'psliwka/vim-smoothie'
+Plug 'luochen1990/rainbow'
+Plug 'editorconfig/editorconfig-vim'
+
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
+Plug 'preservim/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
 call plug#end()
 
-set iskeyword+=-                      	" treat dash separated words as a word text object"
-set formatoptions-=cro                  " Stop newline continution of comments
+let mapleader = ' '
+
+set iskeyword+=-                        " treat dash separated words as a word text object"
 
 syntax enable                           " Enables syntax highlighing
 set hidden                              " Required to keep multiple buffers open multiple buffers
@@ -24,13 +41,12 @@ set nowrap                              " Display long lines as just one line
 set whichwrap+=<,>,[,],h,l
 set encoding=utf-8                      " The encoding displayed
 set pumheight=10                        " Makes popup menu smaller
-set fileencoding=utf-8                  " The encoding written to file
-set ruler              			            " Show the cursor position all the time
+set fileencoding=utf-8                   " The encoding written to file
+set ruler                               " Show the cursor position all the time
 set cmdheight=2                         " More space for displaying messages
 set mouse=a                             " Enable your mouse
 set splitbelow                          " Horizontal splits will automatically be below
 set splitright                          " Vertical splits will automatically be to the right
-set t_Co=256                            " Support 256 colors
 set conceallevel=0                      " So that I can see `` in markdown files
 set tabstop=2                           " Insert 2 spaces for a tab
 set shiftwidth=2                        " Change the number of space characters inserted for indentation
@@ -39,66 +55,167 @@ set expandtab                           " Converts tabs to spaces
 set smartindent                         " Makes indenting smart
 set autoindent                          " Good auto indent
 set laststatus=2                        " Always display the status line
+set relativenumber                      " Line numbersy
 set number                              " Line numbers
-set cursorline                          " Enable highlighting of the current line
-set background=dark                     " tell vim what the background color looks like
 set showtabline=2                       " Always show tabs
-set noshowmode                          " We don't need to see things like -- INSERT -- anymore
-set nobackup                            " This is recommended by coc
-set nowritebackup                       " This is recommended by coc
+set backspace=2                         " Backspace deletes like most programs in insert mode
+" set noshowmode                          " We don't need to see things like -- INSERT -- anymore
+" set nobackup                            " This is recommended by coc
+" set nowritebackup                       " This is recommended by coc
+set showcmd                             " display incomplete commands
 set shortmess+=c                        " Don't pass messages to |ins-completion-menu|.
-set signcolumn=yes                      " Always show the signcolumn, otherwise it would shift the text each time
+" set signcolumn=yes                      " Always show the signcolumn, otherwise it would shift the text each time
 set updatetime=300                      " Faster completion
-set timeoutlen=100                      " By default timeoutlen is 1000 ms
+set timeoutlen=300                     " By default timeoutlen is 1000 ms
 set clipboard=unnamedplus               " Copy paste between vim and everything else
+set t_Co=256                            " Support 256 colors
+set t_ut=
+set termguicolors
+set cursorline
 set incsearch
+set hlsearch
+set path+=**
+set wildmenu
+set undodir=.undo/,~/.undo/,/tmp//
+set undofile
+
+" let g:user_emmet_install_global = 1
+" let g:user_emmet_complete_tag = 1
+
 set nocompatible
+" filetype indent off
+filetype plugin indent on
 
-"Colorscheme - OneDark
-if (has("autocmd") && !has("gui_running"))
-  augroup colorset
+if has('termguicolors')
+  set termguicolors
+endif
+
+set background=dark                     " tell vim what the background color looks like
+colorscheme codedark
+let g:codedark_italics = 1
+
+augroup filetype_vim
     autocmd!
-    let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
-    autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white }) " `bg` will not be styled since there is no `bg` setting
-  augroup END
+    autocmd FileType vim setlocal formatoptions-=ro
+augroup END
+
+silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+
+" set statusline=%f         " Path to the file
+
+set statusline=\ %4\f         " Path to the file
+set statusline+=\ %4\y
+set statusline+=%=Col:\ %-2c\ Line:\%l/\%-4\L
+
+" set statusline+=%=        " Switch to the right side
+" set statusline+=%y
+" set statusline+=Col:\ %4\c
+" set statusline+=%=Current:\ %-4l\ Total:\ %-4L
+" set statusline+=%l        " Current line
+" set statusline+=/         " Separator
+" set statusline+=%L        " Total lines
+" set statusline+=%F\ %l\:%c
+" set statusline+=%F\ Line:\ %l:\%L\ Col:\ %c
+" set statusline+=%=Line:\%l/\%L
+
+let g:rainbow_active = 1
+
+if !has('gui_running') && &term =~ '^\%(screen\|tmux\)'
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
-hi Comment cterm=italic
-let g:onedark_hide_endofbuffer=1
-let g:onedark_terminal_italics=1
-let g:onedark_termcolors=256
-
-syntax on
-colorscheme onedark
-
-" checks if your terminal has 24-bit color support
-if (has("termguicolors"))
-    set termguicolors
-    hi LineNr ctermbg=NONE guibg=NONE
-endif
-
-let g:airline_theme='onedark'
-
-"NERDTREE
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
+" NERDTree
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 
 let NERDTreeShowHidden=1
 
-"NERDTREE GIT PLUGIN
-let g:NERDTreeGitStatusIndicatorMapCustom = {
-                \ 'Modified'  :'✹',
-                \ 'Staged'    :'✚',
-                \ 'Untracked' :'✭',
-                \ 'Renamed'   :'➜',
-                \ 'Unmerged'  :'═',
-                \ 'Deleted'   :'✖',
-                \ 'Dirty'     :'✗',
-                \ 'Ignored'   :'☒',
-                \ 'Clean'     :'✔︎',
-                \ 'Unknown'   :'?',
-                \ }
+" vim-devicons
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_enable = 0
+let g:webdevicons_enable_vimfiler = 1
+let g:webdevicons_enable_airline_statusline = 1
+let g:WebDevIconsUnicodeDecorateFileNodes = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ''
 
-let g:NERDTreeGitStatusUseNerdFonts = 1
+if exists('g:loaded_webdevicons')
+  call webdevicons#refresh()
+endif
+
+let g:webdevicons_conceal_nerdtree_brackets = 0
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+
+" " Airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'codedark'
+
+" autocmd FileType nerdtree setlocal nolist
+
+nmap <silent> <S-L> :bnext<CR>
+nmap <silent> <S-H> :bprevious<CR>
+
+" resize windows w/ ctrl&arrow keys
+nnoremap <silent> <C-Down>    :resize -1<CR>
+nnoremap <silent> <C-Up>  :resize +1<CR>
+nnoremap <silent> <C-Right>  :vertical resize -2<CR>
+nnoremap <silent> <C-Left> :vertical resize +2<CR>
+
+" I hate escape more than anything else
+inoremap jk <C-c>
+inoremap kj <C-c>
+inoremap kk <C-c>
+inoremap jj <C-c>
+
+" TAB in general mode will move to text buffer
+" nnoremap <TAB> :tabn<CR>
+" SHIFT-TAB will go back
+" nnoremap <S-TAB> :tabp<CR>
+
+" Better tabbing
+vnoremap < <gv
+vnoremap > >gv
+
+" Better window navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+nnoremap <silent> <Leader>c :bd<CR>
+nnoremap <silent> <Leader>w :w<CR>
+nnoremap <silent> <Leader>f :FZF<CR>
+
+" Space not working in normal mode
+nnoremap <silent> <Space> :noh<CR>
+
+function! StartifyEntryFormat()
+  return luaeval(
+          \ "require('nvim-web-devicons').get_icon(vim.fn.fnamemodify(' " .. absolute_path .. "', ':e')) or ' '"
+          \ ) . " " . entry_path
+endfunction
+
+let g:user_emmet_mode='a'    "enable all function in all mode.
+
+let g:user_emmet_settings = {
+\  'variables': {'lang': 'en'},
+\  'html': {
+\    'default_attributes': {
+\      'option': {'value': v:null},
+\      'textarea': {'id': v:null, 'name': v:null, 'cols': 10, 'rows': 10},
+\    },
+\    'snippets': {
+\      'html:5': "<!DOCTYPE html>\n"
+\              ."<html lang=\"${lang}\">\n"
+\              ."<head>\n"
+\              ."\t<meta charset=\"${charset}\">\n"
+\              ."\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+\              ."\t<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\" />\n"
+\              ."\t<title>Document</title>\n"
+\              ."</head>\n"
+\              ."<body>\n\t${child}|\n</body>\n"
+\              ."</html>",
+\    },
+\  },
+\}
