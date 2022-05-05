@@ -1,6 +1,10 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+Plug 'airblade/vim-rooter'
+
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -185,7 +189,21 @@ nnoremap <C-l> <C-w>l
 
 nnoremap <silent> <Leader>c :bd<CR>
 nnoremap <silent> <Leader>w :w<CR>
-nnoremap <silent> <Leader>f :FZF<CR>
+
+" FZF
+let g:fzf_command_prefix = 'Fzf'
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+
+nnoremap <silent> <C-p> :FzfFiles<CR>
+nnoremap <silent> <Leader>b :FzfBuffers<CR>
+nnoremap <silent> <Leader>f :FzfRg<CR>
+nnoremap <silent> <Leader>' :FzfMarks<CR>
+nnoremap <silent> <Leader>h :FzfHistory<CR>
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
 
 " Space not working in normal mode
 nnoremap <silent> <Space> :noh<CR>
