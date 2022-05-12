@@ -33,6 +33,8 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
+Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 
 let mapleader = ' '
@@ -150,7 +152,7 @@ endif
 let g:webdevicons_conceal_nerdtree_brackets = 0
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
-" " Airline
+" Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'codedark'
