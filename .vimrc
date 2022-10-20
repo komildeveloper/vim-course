@@ -10,17 +10,18 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-unimpaired'
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 
 Plug 'mattn/emmet-vim'
 
 Plug 'sheerun/vim-polyglot'
-Plug 'mhinz/vim-startify'
+Plug 'ghifarit53/tokyonight-vim'
+" Plug 'mhinz/vim-startify'
 
-Plug 'tomasiser/vim-code-dark'
+" Plug 'tomasiser/vim-code-dark'
 
 Plug 'psliwka/vim-smoothie'
-Plug 'luochen1990/rainbow'
+" Plug 'luochen1990/rainbow'
 Plug 'editorconfig/editorconfig-vim'
 
 Plug 'tpope/vim-fugitive'
@@ -49,7 +50,7 @@ set encoding=utf-8                      " The encoding displayed
 set pumheight=10                        " Makes popup menu smaller
 set fileencoding=utf-8                   " The encoding written to file
 set ruler                               " Show the cursor position all the time
-set cmdheight=2                         " More space for displaying messages
+set cmdheight=1                         " More space for displaying messages
 set mouse=a                             " Enable your mouse
 set splitbelow                          " Horizontal splits will automatically be below
 set splitright                          " Vertical splits will automatically be to the right
@@ -60,10 +61,10 @@ set smarttab                            " Makes tabbing smarter will realize you
 set expandtab                           " Converts tabs to spaces
 set smartindent                         " Makes indenting smart
 set autoindent                          " Good auto indent
-set laststatus=2                        " Always display the status line
+" set laststatus=2                        " Always display the status line
 set relativenumber                      " Line numbersy
 set number                              " Line numbers
-set showtabline=2                       " Always show tabs
+"set showtabline=2                       " Always show tabs
 set backspace=2                         " Backspace deletes like most programs in insert mode
 " set noshowmode                          " We don't need to see things like -- INSERT -- anymore
 " set nobackup                            " This is recommended by coc
@@ -73,7 +74,7 @@ set shortmess+=c                        " Don't pass messages to |ins-completion
 " set signcolumn=yes                      " Always show the signcolumn, otherwise it would shift the text each time
 set updatetime=300                      " Faster completion
 set timeoutlen=300                     " By default timeoutlen is 1000 ms
-set clipboard=unnamedplus               " Copy paste between vim and everything else
+set clipboard=unnamedplus
 set t_Co=256                            " Support 256 colors
 set t_ut=
 set termguicolors
@@ -92,13 +93,15 @@ set nocompatible
 " filetype indent off
 filetype plugin indent on
 
-if has('termguicolors')
-  set termguicolors
-endif
+"if has('termguicolors')
+"  set termguicolors
+"endif
 
 set background=dark                     " tell vim what the background color looks like
-colorscheme codedark
-let g:codedark_italics = 1
+let g:tokyonight_style = 'night' " available: night, storm
+let g:tokyonight_enable_italic = 1
+colorscheme tokyonight
+" let g:codedark_italics = 1
 
 augroup filetype_vim
     autocmd!
@@ -109,9 +112,9 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " set statusline=%f         " Path to the file
 
-set statusline=\ %4\f         " Path to the file
-set statusline+=\ %4\y
-set statusline+=%=Col:\ %-2c\ Line:\%l/\%-4\L
+" set statusline=\ %4\f         " Path to the file
+" set statusline+=\ %4\y
+" set statusline+=%=Col:\ %-2c\ Line:\%l/\%-4\L
 
 " set statusline+=%=        " Switch to the right side
 " set statusline+=%y
@@ -124,7 +127,7 @@ set statusline+=%=Col:\ %-2c\ Line:\%l/\%-4\L
 " set statusline+=%F\ Line:\ %l:\%L\ Col:\ %c
 " set statusline+=%=Line:\%l/\%L
 
-let g:rainbow_active = 1
+" let g:rainbow_active = 1
 
 if !has('gui_running') && &term =~ '^\%(screen\|tmux\)'
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -132,8 +135,8 @@ if !has('gui_running') && &term =~ '^\%(screen\|tmux\)'
 endif
 
 " NERDTree
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
+nnoremap <silent> <Leader>e :NERDTreeToggle<CR>
+nnoremap <silent> <C-f> :NERDTreeFind<CR>
 
 let NERDTreeShowHidden=1
 
@@ -153,9 +156,10 @@ let g:webdevicons_conceal_nerdtree_brackets = 0
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
 " Airline
-let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-let g:airline_theme = 'codedark'
+" let g:airline_theme = 'habamax'
+let g:airline_theme = "tokyonight"
 
 " autocmd FileType nerdtree setlocal nolist
 
@@ -208,13 +212,22 @@ command! -bang -nargs=* Rg
   \   fzf#vim#with_preview(), <bang>0)
 
 " Space not working in normal mode
-nnoremap <silent> <Space> :noh<CR>
+nnoremap <silent> <Space>h :noh<CR>
 
-function! StartifyEntryFormat()
-  return luaeval(
-          \ "require('nvim-web-devicons').get_icon(vim.fn.fnamemodify(' " .. absolute_path .. "', ':e')) or ' '"
-          \ ) . " " . entry_path
-endfunction
+" Copy to X CLIPBOARD
+map <leader>cc :w !xsel -i -b<CR>
+map <leader>cp :w !xsel -i -p<CR>
+map <leader>cs :w !xsel -i -s<CR>
+" Paste from X CLIPBOARD
+map <leader>pp :r!xsel -p<CR>
+map <leader>ps :r!xsel -s<CR>
+map <leader>pb :r!xsel -b<CR>
+
+"function! StartifyEntryFormat()
+"  return luaeval(
+"          \ "require('nvim-web-devicons').get_icon(vim.fn.fnamemodify(' " .. absolute_path .. "', ':e')) or ' '"
+"          \ ) . " " . entry_path
+"endfunction
 
 let g:user_emmet_mode='a'    "enable all function in all mode.
 
