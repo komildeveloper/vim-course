@@ -36,6 +36,8 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'christoomey/vim-tmux-navigator'
 
+Plug 'Yggdroot/indentLine'
+
 call plug#end()
 
 let mapleader = ' '
@@ -222,6 +224,9 @@ map <silent> <leader>cs :w !xsel -i -s<CR>
 map <silent> <leader>pp :r!xsel -p<CR>
 map <silent> <leader>ps :r!xsel -s<CR>
 map <silent> <leader>pb :r!xsel -b<CR>
+
+let g:indentLine_setColors = 0
+let g:indentLine_char = '|'
 
 "function! StartifyEntryFormat()
 "  return luaeval(
